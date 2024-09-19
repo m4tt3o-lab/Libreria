@@ -1,0 +1,18 @@
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .btn i {
+    font-size: 1.2rem;
+  }
+  
+  .btn-primary {
+    font-size: 1rem;
+  }
+  /* Books.css */
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  
+
