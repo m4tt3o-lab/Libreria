@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 function BookPostForm() {
     const [newTitolo, setTitolo] = useState('');
     const [newAutore, setAutore] = useState('');

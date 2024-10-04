@@ -31,7 +31,7 @@ const UserPost = async (e) => {
             setEmail('');
             window.location.reload();
         } else {
-            console.error("Aggiunta fallita.");
+            alert("Aggiunta fallita.");
         }
     } catch (error) {
         console.error("Errore durante la richiesta di aggiunta:", error);

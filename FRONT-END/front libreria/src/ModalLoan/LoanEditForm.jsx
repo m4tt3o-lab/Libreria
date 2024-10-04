@@ -17,7 +17,7 @@ function LoanEditForm({ loan, onSave }) {
                 const response = await fetch("http://localhost:3000/loans/getAvailableBooks");
                 let data = await response.json();
     
-                // aggiunta del libro corrente manualmente per aggirare il problema di mancanza del campo precompilato per il titolo del libro
+                // Aggiunta del libro corrente manualmente per aggirare il problema di mancanza del campo precompilato per il titolo del libro
                 if (loan && loan.libroId) {
                     const isLibroInList = data.some(libro => libro.id === loan.libroId);
                     if (!isLibroInList) {
@@ -25,7 +25,7 @@ function LoanEditForm({ loan, onSave }) {
                             id: loan.libroId,
                             titolo: loan.libro.titolo 
                         };
-                        data = [...data, libroAttuale]; // Aggiunta del libro alla lista
+                        data = [...data, libroAttuale]; 
                     }
                 }
     
@@ -47,12 +47,12 @@ function LoanEditForm({ loan, onSave }) {
 
         fetchLibri();
         fetchUtenti();
-    }, []);
+    }, [loan]);
 
     useEffect(() => {
         if (loan) {
             setDataPrestito(loan.data_prestito ? format(new Date(loan.data_prestito), 'yyyy-MM-dd') : '');
-            setDataRestituzione(loan.data_restituzione ? format(new Date(loan.data_restituzione), 'yyyy-MM-dd') : null);
+            setDataRestituzione(loan.data_restituzione ? format(new Date(loan.data_restituzione), 'yyyy-MM-dd') : '');
             setSelectedLibro(loan.libroId ?? '');
             setSelectedUtente(loan.utenteId ?? '');
             setIsCompleted(loan.data_restituzione ? true : false);
@@ -61,7 +61,7 @@ function LoanEditForm({ loan, onSave }) {
 
     function validateDate(dateString) {
         if (!dateString) {
-            return true; // data valida se vuota
+            return true; 
         }
     
         const dateParts = dateString.split('-');
@@ -92,11 +92,6 @@ function LoanEditForm({ loan, onSave }) {
     const LoanPatch = async (e) => {
         e.preventDefault();
 
-        if (isCompleted) {
-            setError('Il prestito è già stato restituito e non può essere modificato.');
-            return;
-        }
-
         if (!validateDate(newDataPrestito) || !validateDate(newDataRestituzione)) {
             setError('Data di prestito o di restituzione non valida. Inserisci una data valida nel formato yyyy-MM-dd.');
             setTimeout(() => {
@@ -105,7 +100,7 @@ function LoanEditForm({ loan, onSave }) {
             return;
         }
 
-        const dataRestituzioneToSend = newDataRestituzione ? newDataRestituzione : null;
+        const dataRestituzioneToSend = newDataRestituzione || null;
 
         const url = `http://localhost:3000/loans/${loan.id}`;
         try {
@@ -114,13 +109,13 @@ function LoanEditForm({ loan, onSave }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     data_prestito: newDataPrestito,
-                    data_restituzione: dataRestituzioneToSend ,
+                    data_restituzione: dataRestituzioneToSend,
                     libroId: selectedLibro,
                     utenteId: selectedUtente
                 }),
             });
 
-             await response.json();  
+            const result = await response.json();  
 
             if (response.ok) {
                 setDataPrestito('');
@@ -137,7 +132,6 @@ function LoanEditForm({ loan, onSave }) {
             console.error("Errore durante la richiesta di modifica:", error);
             setError("Errore durante la richiesta di modifica.");
         }
-
     };
 
     return (
@@ -149,6 +143,7 @@ function LoanEditForm({ loan, onSave }) {
                     value={newDataPrestito}
                     onChange={(e) => setDataPrestito(e.target.value)}
                     required
+                    disabled={isCompleted} 
                     style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 />
             </div>
@@ -157,7 +152,8 @@ function LoanEditForm({ loan, onSave }) {
                 <input
                     type="date"
                     value={newDataRestituzione}
-                    onChange={(e) => setDataRestituzione(e.target.value || null)}
+                    onChange={(e) => setDataRestituzione(e.target.value || '')}
+                    disabled={isCompleted} 
                     style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 />
             </div>
@@ -206,7 +202,7 @@ function LoanEditForm({ loan, onSave }) {
                 </button>
             </div>
         </form>
-    )
+    );
 }
 
 export default LoanEditForm;

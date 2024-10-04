@@ -76,19 +76,22 @@ export const postBook = async (req, res) => {
 export const updateLibro = async (req, res) => {
   const { id } = req.params;
   const { titolo, autore, annoPubblicazione, genere } = req.body;
+  
   try {
-    const libro = await Libro.findByPk(id); 
+    const libro = await Libro.findByPk(id);
     if (!libro) {
       return res.status(404).json({ error: 'Libro non trovato' });
     }
-
+ 
     libro.titolo = titolo;
     libro.autore = autore;
     libro.annoPubblicazione = annoPubblicazione;
     libro.genere = genere;
-
+    
     await libro.save(); 
+
     res.status(200).json(libro);
+    
   } catch (error) {
     res.status(500).json({ error: 'Errore nell\'aggiornamento del libro' });
   }

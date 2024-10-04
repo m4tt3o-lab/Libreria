@@ -3,13 +3,17 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../style/main.css';
 import { Link } from "react-router-dom";
 import LoansModal from "../ModalLoan/LoansModal.jsx";
+import ConfirmDeleteLoanModal from "../ModalLoan/LoanDeleteModal.jsx";
 
 function Loans() {
     const [loans, setLoans] = useState([]);
     const [searchLoan, setSearchLoan] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false); 
     const [selectedLoan, setSelectedLoan] = useState(null);
+    const [LoanToDelete, setLoanToDelete] = useState(null);
+    const [error, setError] = useState('');
 
 
     useEffect(() => {
@@ -63,6 +67,16 @@ function Loans() {
       
       const handleCloseEditModal = () => setShowEditModal(false);
 
+      const handleOpenDeleteModal = (loan) => {
+        setLoanToDelete(loan);
+        setShowDeleteModal(true);
+      };
+    
+      const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+      };
+
 
       const removeLoan = async (id) => {
         const url = `http://localhost:3000/loans/${id}`;
@@ -74,19 +88,21 @@ function Loans() {
     
           if (response.ok) {
             setLoans((prevLoans) =>
-              prevLoans.filter((loan) => loan.id !== id)
-            );
+              prevLoans.filter((loan) => loan.id !== id));
+            setError('');
+            handleCloseDeleteModal();
           } else {
-            alert('impossibile eliminare un prestito attivo')
+            setError('impossibile eliminare un prestito attivo')
+            setTimeout(()=>{
+              setError('')
+            },2000)
+            
           }
         } catch (error) {
           console.error('Errore durante la richiesta di cancellazione del prestito:', error);
         }
       };
     
-
-
-   
       return (
         <div className="container-fluid p-0 m-0">
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -145,7 +161,7 @@ function Loans() {
                       <button className="btn btn-success me-2" onClick={() => handleOpenEditModal(loan)} >
                         <i className="bi bi-pencil-square"></i>
                       </button>
-                      <button className="btn btn-danger" onClick={() => removeLoan(loan.id)} >
+                      <button className="btn btn-danger" onClick={() => handleOpenDeleteModal(loan)} >
                         <i className="bi bi-trash"></i>
                       </button>
                     </div>
@@ -154,6 +170,15 @@ function Loans() {
               ))}
             </tbody>
           </table>
+
+        <ConfirmDeleteLoanModal
+        isOpen={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={() => removeLoan(LoanToDelete.id)}
+        error={error}
+      />
+
+
         <LoansModal
         showModal={showAddModal || showEditModal}
         onClose={showEditModal ? handleCloseEditModal : handleCloseAddModal}

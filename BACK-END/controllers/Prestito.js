@@ -29,10 +29,14 @@ export const allLoans = async (req, res) => {
           const data_prestito = new Date(loan.data_prestito);
           const data_restituzione = loan.data_restituzione ? new Date(loan.data_restituzione) : null;
 
+    
+
+          
           return {
               ...loan.toJSON(),
               data_prestito: isNaN(data_prestito.getTime()) ? 'Invalid Date' : format(data_prestito, 'yyyy-MM-dd'), 
               data_restituzione: data_restituzione && !isNaN(data_restituzione.getTime()) ? format(data_restituzione, 'yyyy-MM-dd') : null ,
+        
           };
       });
 
@@ -212,6 +216,7 @@ export const updateLoan = async (req, res) => {
     loan.data_restituzione = data_restituzione;
     loan.libroId = libroId;
     loan.utenteId = utenteId;
+
 
     await loan.save(); 
     res.status(200).json(loan); 

@@ -4,14 +4,17 @@ import '../style/main.css';
 import _ from 'lodash';
 import BooksModal from "../ModalBook/BooksModal.jsx";
 import { Link } from "react-router-dom";
+import ConfirmDeleteBookModal from "../ModalBook/BooksDeleteModal.jsx";
 
 function Books() {
   const [books, setBooks] = useState([]);
   const [searchBook, setSearchBook] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); 
   const [selectedBook, setSelectedBook] = useState(null);
-
+  const [bookToDelete, setBookToDelete] = useState(null); 
+  const [error, setError] = useState('');
 
   useEffect(() => {
     getBooks();
@@ -63,11 +66,20 @@ function Books() {
     setSelectedBook(book);
     setShowEditModal(true);
   };
-  
   const handleCloseEditModal = () => setShowEditModal(false);
-  
-  const removeBook = async (id) => {
-    const url = `http://localhost:3000/books/${id}`;
+
+  const handleOpenDeleteModal = (book) => {
+    setBookToDelete(book);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setBookToDelete(null);
+  };
+
+  const confirmDelete = async () => {
+    const url = `http://localhost:3000/books/${bookToDelete.id}`;
 
     try {
       const response = await fetch(url, {
@@ -75,16 +87,19 @@ function Books() {
       });
 
       if (response.ok) {
-        setBooks((prevBooks) =>
-          prevBooks.filter((book) => book.id !== id)
-        );
+        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookToDelete.id));
+        setError('')
+        handleCloseDeleteModal(); 
       } else {
-        console.error('Errore durante la cancellazione del libro.');
-        alert('impossibile eliminare un libro in prestito ad un utente')
-      }
+        setError('Impossibile cancellare un libro collegato ad un prestito attivo');
+        setTimeout(()=>{
+          setError('')
+        },2000)
+    }
     } catch (error) {
       console.error('Errore durante la richiesta di cancellazione del libro:', error);
     }
+
   };
 
   return (
@@ -141,7 +156,7 @@ function Books() {
                   <button className="btn btn-success me-2" onClick={() => handleOpenEditModal(book)}>
                     <i className="bi bi-pencil-square"></i>
                   </button>
-                  <button className="btn btn-danger" onClick={() => removeBook(book.id)}>
+                  <button className="btn btn-danger" onClick={() => handleOpenDeleteModal(book)}>
                     <i className="bi bi-trash"></i>
                   </button>
                 </div>
@@ -150,6 +165,13 @@ function Books() {
           ))}
         </tbody>
       </table>
+      <ConfirmDeleteBookModal 
+        isOpen={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={confirmDelete}
+        itemName={bookToDelete ? bookToDelete.titolo : ''}
+        error={error}
+      />
       <BooksModal
         showModal={showAddModal || showEditModal}
         onClose={showEditModal ? handleCloseEditModal : handleCloseAddModal}
