@@ -39,7 +39,6 @@ export const getUtentiByEmail = async (req, res) => {
       whereClause.email = { [Op.like]: `%${email}%` }; 
     }
 
-// ricerca del libro in base alla clausola specificata
     const utenti = await Utente.findAll({ where: whereClause });
     res.json(utenti);
   } catch (error) {

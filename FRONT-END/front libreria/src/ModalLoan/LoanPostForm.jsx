@@ -72,6 +72,7 @@ return (
             type="date"
             value={newDataPrestito}
             onChange={(e) => setDataPrestito(e.target.value)}
+            className='form-control'
             required
             style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
         />
@@ -82,6 +83,7 @@ return (
             type="date"
             value={newDataRestituzione}
             onChange={(e) => setDataPrestito(e.target.value || null)}
+            className='form-control'
             style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
         />
     </div>
@@ -90,6 +92,7 @@ return (
                 <select
                     value={selectedLibro}
                     onChange={(e) => setSelectedLibro(e.target.value)}
+                    className='form-control'
                     style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 >
                     <option value="">Seleziona un libro</option>
@@ -105,6 +108,8 @@ return (
                  <select
                     value={selectedUtente}
                     onChange={(e) => setSelectedUtente(e.target.value)}
+                    className='form-control'
+                    style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 >
                     <option value="">Seleziona un utente</option>
                     {utenti.map(utente => (

@@ -29,7 +29,7 @@ const UserPost = async (e) => {
             setNome('');
             setCognome('');
             setEmail('');
-            window.location.reload();
+            window.location.reload(); 
         } else {
             alert("Aggiunta fallita.");
         }

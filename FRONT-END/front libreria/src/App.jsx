@@ -15,7 +15,7 @@ function App() {
           <Route path='/Books' element={<Books/>} /> 
           <Route path='/Users' element={<Users/>} />
           <Route path='/Loans' element={<Loans/>} />
-          <Route path='/' element={<Navigate to="/Books"/>} /> 
+          <Route path='/' element={<Navigate to="/Books"/>}/> 
           <Route path="*" element={<NotFound />} /> 
         </Routes>
     </Router>

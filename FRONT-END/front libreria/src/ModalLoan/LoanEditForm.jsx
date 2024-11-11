@@ -137,31 +137,34 @@ function LoanEditForm({ loan, onSave }) {
     return (
         <form onSubmit={LoanPatch} className="p-3" style={{ backgroundColor: "#f8f9fa", border: "1px solid #dee2e6", borderRadius: "5px" }}>
             <div className="mb-3">
-                <label htmlFor="dataPrestito" className="form-label" style={{ color: "#343a40" }}>Data Prestito: </label>
+                <label htmlFor="dataPrestito" className="form-label me-2" style={{ color: "#343a40" }}>Data Prestito: </label>
                 <input
                     type="date"
                     value={newDataPrestito}
                     onChange={(e) => setDataPrestito(e.target.value)}
+                    className='form-control'
                     required
                     disabled={isCompleted} 
-                    style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
+                    style={{ borderColor:'black', backgroundColor: "#e9ecef" }}
                 />
             </div>
             <div className="mb-3">
-                <label htmlFor="dataRestituzione" className="form-label" style={{ color: "#343a40" }}>Data Restituzione: </label>
+                <label htmlFor="dataRestituzione" className="form-label me-2" style={{ color: "#343a40" }}>Data Restituzione: </label>
                 <input
                     type="date"
                     value={newDataRestituzione}
                     onChange={(e) => setDataRestituzione(e.target.value || '')}
+                    className='form-control'
                     disabled={isCompleted} 
                     style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 />
             </div>
             <div className="mb-3">
-                <label htmlFor="libroId" className="form-label" style={{ color: "#343a40" }}>Seleziona Libro</label>
+                <label htmlFor="libroId" className="form-label me-2" style={{ color: "#343a40" }}>Seleziona Libro</label>
                 <select
                     value={selectedLibro}
                     onChange={(e) => setSelectedLibro(e.target.value)}
+                    className='form-control'
                     style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 >
                     <option value="">Seleziona un libro</option>
@@ -173,10 +176,11 @@ function LoanEditForm({ loan, onSave }) {
                 </select>
             </div>
             <div className="mb-3">
-                <label htmlFor="utenteId" className="form-label" style={{ color: "#343a40" }}>Seleziona Utente</label>
+                <label htmlFor="utenteId" className="form-label me-2" style={{ color: "#343a40" }}>Seleziona Utente</label>
                 <select
                     value={selectedUtente}
                     onChange={(e) => setSelectedUtente(e.target.value)}
+                    className='form-control'
                     style={{ borderColor: "#6c757d", backgroundColor: "#e9ecef" }}
                 >
                     <option value="">Seleziona un utente</option>
